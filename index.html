@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Start on TensorBoard by RobRomijnders</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Start on TensorBoard</h1>
+        <p>Start of TensorFlow with TensorBoard</p>
+
+        <p class="view"><a href="https://github.com/RobRomijnders/tensorflow_basic">View the Project on GitHub <small>RobRomijnders/tensorflow_basic</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/RobRomijnders/tensorflow_basic/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/RobRomijnders/tensorflow_basic/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/RobRomijnders/tensorflow_basic">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>
+<a id="start-on-tensorboard" class="anchor" href="#start-on-tensorboard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Start on TensorBoard</h3>
+
+<p>With the increasing popularity of TensorFlow, I also explored its use this week. Both Google as Youtubers made nice tutorials to get used to the world of placeholders and sessions.</p>
+
+<p>In making my first project work on the MNIST, I browsed the forums for answers to my questions. Many people asked for some example code to work from, rather than tutorials. Therefore, I decided to share my code in this preliminary stage.</p>
+
+<p>For the quick forum-browsers, here is a working code. The updated version is on my GitHub in the repository tensorflow_basic</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-c"># -*- coding: utf-8 -*-</span>
+<span class="pl-s"><span class="pl-pds">"""</span></span>
+<span class="pl-s">Created on Tue Mar 22 10:43:29 2016</span>
+<span class="pl-s"></span>
+<span class="pl-s">@author: rob</span>
+<span class="pl-s"><span class="pl-pds">"""</span></span>
+<span class="pl-k">import</span> numpy <span class="pl-k">as</span> np
+<span class="pl-k">import</span> tensorflow <span class="pl-k">as</span> tf
+<span class="pl-k">import</span> input_data
+<span class="pl-k">from</span> numpy <span class="pl-k">import</span> genfromtxt
+sess <span class="pl-k">=</span> tf.InteractiveSession()
+
+
+<span class="pl-c">#%For quick debugging, we use a two-class version of the MNIST,</span>
+<span class="pl-c">#where the targets are encoded one-hot.</span>
+<span class="pl-c"># You can use any variation of MNIST. As long as you make sure</span>
+<span class="pl-c">#that y_train and y_test are one-hot and X_train and X_test have</span>
+<span class="pl-c">#the samples ordered in rows</span>
+<span class="pl-c1">X_test</span> <span class="pl-k">=</span> genfromtxt(<span class="pl-s"><span class="pl-pds">'</span>X_test.csv<span class="pl-pds">'</span></span>, <span class="pl-v">delimiter</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>,<span class="pl-pds">'</span></span>)
+y_test <span class="pl-k">=</span> genfromtxt(<span class="pl-s"><span class="pl-pds">'</span>y_test.csv<span class="pl-pds">'</span></span>, <span class="pl-v">delimiter</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>,<span class="pl-pds">'</span></span>)
+<span class="pl-c1">X_train</span> <span class="pl-k">=</span> genfromtxt(<span class="pl-s"><span class="pl-pds">'</span>X_train.csv<span class="pl-pds">'</span></span>, <span class="pl-v">delimiter</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>,<span class="pl-pds">'</span></span>)
+y_train <span class="pl-k">=</span> genfromtxt(<span class="pl-s"><span class="pl-pds">'</span>y_train.csv<span class="pl-pds">'</span></span>, <span class="pl-v">delimiter</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>,<span class="pl-pds">'</span></span>)
+
+<span class="pl-c1">N</span> <span class="pl-k">=</span> <span class="pl-c1">X_train</span>.shape[<span class="pl-c1">0</span>]
+Ntest <span class="pl-k">=</span> <span class="pl-c1">X_test</span>.shape[<span class="pl-c1">0</span>]
+
+<span class="pl-c">#Check for the input sizes</span>
+<span class="pl-k">assert</span> (<span class="pl-c1">N</span><span class="pl-k">&gt;</span><span class="pl-c1">X_train</span>.shape[<span class="pl-c1">1</span>]), <span class="pl-s"><span class="pl-pds">'</span>You are feeding a fat matrix for training, are you sure?<span class="pl-pds">'</span></span>
+<span class="pl-k">assert</span> (Ntest<span class="pl-k">&gt;</span><span class="pl-c1">X_test</span>.shape[<span class="pl-c1">1</span>]), <span class="pl-s"><span class="pl-pds">'</span>You are feeding a fat matrix for testing, are you sure?<span class="pl-pds">'</span></span>
+<span class="pl-k">assert</span> (y_train.shape[<span class="pl-c1">0</span>]<span class="pl-k">&gt;</span>y_train.shape[<span class="pl-c1">1</span>]), <span class="pl-s"><span class="pl-pds">'</span>You are feedinf a fat matrix for labels, are you sure?<span class="pl-pds">'</span></span>
+
+<span class="pl-c"># Nodes for the input variables</span>
+x <span class="pl-k">=</span> tf.placeholder(<span class="pl-s"><span class="pl-pds">"</span>float<span class="pl-pds">"</span></span>, <span class="pl-v">shape</span><span class="pl-k">=</span>[<span class="pl-c1">None</span>, <span class="pl-c1">784</span>], <span class="pl-v">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>Input_data<span class="pl-pds">'</span></span>)
+y_ <span class="pl-k">=</span> tf.placeholder(<span class="pl-s"><span class="pl-pds">"</span>float<span class="pl-pds">"</span></span>, <span class="pl-v">shape</span><span class="pl-k">=</span>[<span class="pl-c1">None</span>, <span class="pl-c1">10</span>], <span class="pl-v">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>Ground_truth<span class="pl-pds">'</span></span>)
+
+
+<span class="pl-c"># Define functions for initializing variables and standard layers</span>
+<span class="pl-c">#For now, this seems superfluous, but in extending the code</span>
+<span class="pl-c">#to many more layers, this will keep our code</span>
+<span class="pl-c">#read-able</span>
+<span class="pl-k">def</span> <span class="pl-en">weight_variable</span>(<span class="pl-smi">shape</span>, <span class="pl-smi">name</span>):
+  initial <span class="pl-k">=</span> tf.truncated_normal(shape, <span class="pl-v">stddev</span><span class="pl-k">=</span><span class="pl-c1">0.1</span>)
+  <span class="pl-k">return</span> tf.Variable(initial, <span class="pl-v">name</span> <span class="pl-k">=</span> name)
+
+<span class="pl-k">def</span> <span class="pl-en">bias_variable</span>(<span class="pl-smi">shape</span>, <span class="pl-smi">name</span>):
+  initial <span class="pl-k">=</span> tf.constant(<span class="pl-c1">0.1</span>, <span class="pl-v">shape</span><span class="pl-k">=</span>shape)
+  <span class="pl-k">return</span> tf.Variable(initial, <span class="pl-v">name</span> <span class="pl-k">=</span> name)
+
+<span class="pl-k">def</span> <span class="pl-en">conv2d</span>(<span class="pl-smi">x</span>, <span class="pl-smi">W</span>):
+  <span class="pl-k">return</span> tf.nn.conv2d(x, <span class="pl-c1">W</span>, <span class="pl-v">strides</span><span class="pl-k">=</span>[<span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">1</span>], <span class="pl-v">padding</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>SAME<span class="pl-pds">'</span></span>)
+
+<span class="pl-k">def</span> <span class="pl-en">max_pool_2x2</span>(<span class="pl-smi">x</span>):
+  <span class="pl-k">return</span> tf.nn.max_pool(x, <span class="pl-v">ksize</span><span class="pl-k">=</span>[<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">2</span>, <span class="pl-c1">1</span>],
+                        <span class="pl-v">strides</span><span class="pl-k">=</span>[<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">2</span>, <span class="pl-c1">1</span>], <span class="pl-v">padding</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>SAME<span class="pl-pds">'</span></span>)
+
+<span class="pl-k">with</span> tf.name_scope(<span class="pl-s"><span class="pl-pds">"</span>Reshaping_data<span class="pl-pds">"</span></span>) <span class="pl-k">as</span> scope:
+  x_image <span class="pl-k">=</span> tf.reshape(x, [<span class="pl-k">-</span><span class="pl-c1">1</span>,<span class="pl-c1">28</span>,<span class="pl-c1">28</span>,<span class="pl-c1">1</span>])
+  image_summ <span class="pl-k">=</span> tf.image_summary(<span class="pl-s"><span class="pl-pds">"</span>Example_images<span class="pl-pds">"</span></span>, x_image)
+
+<span class="pl-k">with</span> tf.name_scope(<span class="pl-s"><span class="pl-pds">"</span>Conv1<span class="pl-pds">"</span></span>) <span class="pl-k">as</span> scope:
+  <span class="pl-c1">W_conv1</span> <span class="pl-k">=</span> weight_variable([<span class="pl-c1">5</span>, <span class="pl-c1">5</span>, <span class="pl-c1">1</span>, <span class="pl-c1">32</span>], <span class="pl-s"><span class="pl-pds">'</span>Conv_Layer_1<span class="pl-pds">'</span></span>)
+  b_conv1 <span class="pl-k">=</span> bias_variable([<span class="pl-c1">32</span>], <span class="pl-s"><span class="pl-pds">'</span>bias_for_Conv_Layer_1<span class="pl-pds">'</span></span>)
+  h_conv1 <span class="pl-k">=</span> tf.nn.relu(conv2d(x_image, <span class="pl-c1">W_conv1</span>) <span class="pl-k">+</span> b_conv1)
+  h_pool1 <span class="pl-k">=</span> max_pool_2x2(h_conv1)
+
+<span class="pl-k">with</span> tf.name_scope(<span class="pl-s"><span class="pl-pds">'</span>Visualize_filters<span class="pl-pds">'</span></span>) <span class="pl-k">as</span> scope:
+
+<span class="pl-c"># In this section, we visualize the filters of the first convolutional layers</span>
+<span class="pl-c"># We concatenate the filters into one image</span>
+<span class="pl-c"># Credits for the inspiration go to Martin Gorner</span>
+  <span class="pl-c1">W1_a</span> <span class="pl-k">=</span> <span class="pl-c1">W_conv1</span>                       <span class="pl-c"># [5, 5, 1, 32]</span>
+  W1pad<span class="pl-k">=</span> tf.zeros([<span class="pl-c1">5</span>, <span class="pl-c1">5</span>, <span class="pl-c1">1</span>, <span class="pl-c1">1</span>])        <span class="pl-c"># [5, 5, 1, 4]  - four zero kernels for padding</span>
+  <span class="pl-c"># We have a 6 by 6 grid of kernepl visualizations. yet we only have 32 filters</span>
+  <span class="pl-c"># Therefore, we concatenate 4 empty filters</span>
+  <span class="pl-c1">W1_b</span> <span class="pl-k">=</span> tf.concat(<span class="pl-c1">3</span>, [<span class="pl-c1">W1_a</span>, W1pad, W1pad, W1pad, W1pad])   <span class="pl-c"># [5, 5, 1, 36]  </span>
+  <span class="pl-c1">W1_c</span> <span class="pl-k">=</span> tf.split(<span class="pl-c1">3</span>, <span class="pl-c1">36</span>, <span class="pl-c1">W1_b</span>)         <span class="pl-c"># 36 x [5, 5, 1, 1]</span>
+  <span class="pl-c1">W1_row0</span> <span class="pl-k">=</span> tf.concat(<span class="pl-c1">0</span>, <span class="pl-c1">W1_c</span>[<span class="pl-c1">0</span>:<span class="pl-c1">6</span>])    <span class="pl-c"># [30, 5, 1, 1]</span>
+  <span class="pl-c1">W1_row1</span> <span class="pl-k">=</span> tf.concat(<span class="pl-c1">0</span>, <span class="pl-c1">W1_c</span>[<span class="pl-c1">6</span>:<span class="pl-c1">12</span>])   <span class="pl-c"># [30, 5, 1, 1]</span>
+  <span class="pl-c1">W1_row2</span> <span class="pl-k">=</span> tf.concat(<span class="pl-c1">0</span>, <span class="pl-c1">W1_c</span>[<span class="pl-c1">12</span>:<span class="pl-c1">18</span>])  <span class="pl-c"># [30, 5, 1, 1]</span>
+  <span class="pl-c1">W1_row3</span> <span class="pl-k">=</span> tf.concat(<span class="pl-c1">0</span>, <span class="pl-c1">W1_c</span>[<span class="pl-c1">18</span>:<span class="pl-c1">24</span>])  <span class="pl-c"># [30, 5, 1, 1]</span>
+  <span class="pl-c1">W1_row4</span> <span class="pl-k">=</span> tf.concat(<span class="pl-c1">0</span>, <span class="pl-c1">W1_c</span>[<span class="pl-c1">24</span>:<span class="pl-c1">30</span>])  <span class="pl-c"># [30, 5, 1, 1]</span>
+  <span class="pl-c1">W1_row5</span> <span class="pl-k">=</span> tf.concat(<span class="pl-c1">0</span>, <span class="pl-c1">W1_c</span>[<span class="pl-c1">30</span>:<span class="pl-c1">36</span>])  <span class="pl-c"># [30, 5, 1, 1]</span>
+  <span class="pl-c1">W1_d</span> <span class="pl-k">=</span> tf.concat(<span class="pl-c1">1</span>, [<span class="pl-c1">W1_row0</span>, <span class="pl-c1">W1_row1</span>, <span class="pl-c1">W1_row2</span>, <span class="pl-c1">W1_row3</span>, <span class="pl-c1">W1_row4</span>, <span class="pl-c1">W1_row5</span>]) <span class="pl-c"># [30, 30, 1, 1]</span>
+  <span class="pl-c1">W1_e</span> <span class="pl-k">=</span> tf.reshape(<span class="pl-c1">W1_d</span>, [<span class="pl-c1">1</span>, <span class="pl-c1">30</span>, <span class="pl-c1">30</span>, <span class="pl-c1">1</span>])
+  Wtag <span class="pl-k">=</span> tf.placeholder(tf.string, <span class="pl-c1">None</span>)
+  tf.image_summary(<span class="pl-s"><span class="pl-pds">"</span>Visualize_kernels<span class="pl-pds">"</span></span>, <span class="pl-c1">W1_e</span>)
+
+<span class="pl-c"># The name_scope lines serve to organize our graphs that TensorFlow will create</span>
+<span class="pl-c"># for us</span>
+<span class="pl-k">with</span> tf.name_scope(<span class="pl-s"><span class="pl-pds">"</span>Conv2<span class="pl-pds">"</span></span>) <span class="pl-k">as</span> scope:
+  <span class="pl-c1">W_conv2</span> <span class="pl-k">=</span> weight_variable([<span class="pl-c1">5</span>, <span class="pl-c1">5</span>, <span class="pl-c1">32</span>, <span class="pl-c1">64</span>], <span class="pl-s"><span class="pl-pds">'</span>Conv_Layer_2<span class="pl-pds">'</span></span>)
+  b_conv2 <span class="pl-k">=</span> bias_variable([<span class="pl-c1">64</span>], <span class="pl-s"><span class="pl-pds">'</span>bias_for_Conv_Layer_2<span class="pl-pds">'</span></span>)
+  h_conv2 <span class="pl-k">=</span> tf.nn.relu(conv2d(h_pool1, <span class="pl-c1">W_conv2</span>) <span class="pl-k">+</span> b_conv2)
+  h_pool2 <span class="pl-k">=</span> max_pool_2x2(h_conv2)
+
+<span class="pl-k">with</span> tf.name_scope(<span class="pl-s"><span class="pl-pds">"</span>Fully_Connected1<span class="pl-pds">"</span></span>) <span class="pl-k">as</span> scope:
+  <span class="pl-c1">W_fc1</span> <span class="pl-k">=</span> weight_variable([<span class="pl-c1">7</span> <span class="pl-k">*</span> <span class="pl-c1">7</span> <span class="pl-k">*</span> <span class="pl-c1">64</span>, <span class="pl-c1">1024</span>], <span class="pl-s"><span class="pl-pds">'</span>Fully_Connected_layer_1<span class="pl-pds">'</span></span>)
+  b_fc1 <span class="pl-k">=</span> bias_variable([<span class="pl-c1">1024</span>], <span class="pl-s"><span class="pl-pds">'</span>bias_for_Fully_Connected_Layer_1<span class="pl-pds">'</span></span>)
+  h_pool2_flat <span class="pl-k">=</span> tf.reshape(h_pool2, [<span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">7</span><span class="pl-k">*</span><span class="pl-c1">7</span><span class="pl-k">*</span><span class="pl-c1">64</span>])
+  h_fc1 <span class="pl-k">=</span> tf.nn.relu(tf.matmul(h_pool2_flat, <span class="pl-c1">W_fc1</span>) <span class="pl-k">+</span> b_fc1)
+
+<span class="pl-k">with</span> tf.name_scope(<span class="pl-s"><span class="pl-pds">"</span>Fully_Connected2<span class="pl-pds">"</span></span>) <span class="pl-k">as</span> scope:
+  keep_prob <span class="pl-k">=</span> tf.placeholder(<span class="pl-s"><span class="pl-pds">"</span>float<span class="pl-pds">"</span></span>)
+  h_fc1_drop <span class="pl-k">=</span> tf.nn.dropout(h_fc1, keep_prob)
+
+  <span class="pl-c1">W_fc2</span> <span class="pl-k">=</span> tf.Variable(tf.truncated_normal([<span class="pl-c1">1024</span>, <span class="pl-c1">10</span>], <span class="pl-v">stddev</span><span class="pl-k">=</span><span class="pl-c1">0.1</span>),<span class="pl-v">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>W_fc2<span class="pl-pds">'</span></span>)
+  b_fc2 <span class="pl-k">=</span> tf.Variable(tf.constant(<span class="pl-c1">0.1</span>, <span class="pl-v">shape</span><span class="pl-k">=</span>[<span class="pl-c1">10</span>]),<span class="pl-v">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>b_fc2<span class="pl-pds">'</span></span>)
+
+<span class="pl-k">with</span> tf.name_scope(<span class="pl-s"><span class="pl-pds">"</span>Final_Softmax<span class="pl-pds">"</span></span>) <span class="pl-k">as</span> scope:
+  y_conv<span class="pl-k">=</span>tf.nn.softmax(tf.matmul(h_fc1_drop, <span class="pl-c1">W_fc2</span>) <span class="pl-k">+</span> b_fc2)
+
+<span class="pl-c"># Also add histograms to TensorBoard</span>
+w_hist <span class="pl-k">=</span> tf.histogram_summary(<span class="pl-s"><span class="pl-pds">"</span>W_fc2<span class="pl-pds">"</span></span>, <span class="pl-c1">W_fc2</span>)
+b_hist <span class="pl-k">=</span> tf.histogram_summary(<span class="pl-s"><span class="pl-pds">"</span>b_fc2<span class="pl-pds">"</span></span>, b_fc2)
+
+<span class="pl-k">with</span> tf.name_scope(<span class="pl-s"><span class="pl-pds">"</span>Entropy<span class="pl-pds">"</span></span>) <span class="pl-k">as</span> scope:
+    cross_entropy <span class="pl-k">=</span> <span class="pl-k">-</span>tf.reduce_sum(y_<span class="pl-k">*</span>tf.log(y_conv))
+    ce_summ <span class="pl-k">=</span> tf.scalar_summary(<span class="pl-s"><span class="pl-pds">"</span>cross entropy<span class="pl-pds">"</span></span>, cross_entropy)
+<span class="pl-k">with</span> tf.name_scope(<span class="pl-s"><span class="pl-pds">"</span>train<span class="pl-pds">"</span></span>) <span class="pl-k">as</span> scope:
+    train_step <span class="pl-k">=</span> tf.train.AdamOptimizer(<span class="pl-c1">1e-4</span>).minimize(cross_entropy)
+<span class="pl-k">with</span> tf.name_scope(<span class="pl-s"><span class="pl-pds">"</span>Evaluating<span class="pl-pds">"</span></span>) <span class="pl-k">as</span> scope:
+    correct_prediction <span class="pl-k">=</span> tf.equal(tf.argmax(y_conv,<span class="pl-c1">1</span>), tf.argmax(y_,<span class="pl-c1">1</span>))
+    accuracy <span class="pl-k">=</span> tf.reduce_mean(tf.cast(correct_prediction, <span class="pl-s"><span class="pl-pds">"</span>float<span class="pl-pds">"</span></span>))
+    accuracy_summary <span class="pl-k">=</span> tf.scalar_summary(<span class="pl-s"><span class="pl-pds">"</span>accuracy<span class="pl-pds">"</span></span>, accuracy)
+
+
+merged <span class="pl-k">=</span> tf.merge_all_summaries()
+writer <span class="pl-k">=</span> tf.train.SummaryWriter(<span class="pl-s"><span class="pl-pds">"</span>/home/rob/Dropbox/ConvNets/tf/log_tb<span class="pl-pds">"</span></span>, sess.graph_def)
+
+sess.run(tf.initialize_all_variables())
+<span class="pl-k">for</span> i <span class="pl-k">in</span> <span class="pl-c1">range</span>(<span class="pl-c1">500</span>):
+  batch_ind <span class="pl-k">=</span> np.random.choice(<span class="pl-c1">N</span>,<span class="pl-c1">50</span>,<span class="pl-v">replace</span><span class="pl-k">=</span><span class="pl-c1">False</span>)
+  <span class="pl-k">if</span> i<span class="pl-k">%</span><span class="pl-c1">100</span> <span class="pl-k">==</span> <span class="pl-c1">0</span>:
+    result <span class="pl-k">=</span> sess.run([accuracy,merged], <span class="pl-v">feed_dict</span><span class="pl-k">=</span>{ x: <span class="pl-c1">X_test</span>, y_: y_test, keep_prob: <span class="pl-c1">1.0</span>})
+    acc <span class="pl-k">=</span> result[<span class="pl-c1">0</span>]
+    summary_str <span class="pl-k">=</span> result[<span class="pl-c1">1</span>]
+    writer.add_summary(summary_str, i)
+    writer.flush()  <span class="pl-c">#Don't forget this command! It makes sure Python writes the summaries to the log-file</span>
+    <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">"</span>Accuracy at step <span class="pl-c1">%s</span>: <span class="pl-c1">%s</span><span class="pl-pds">"</span></span> <span class="pl-k">%</span> (i, acc))
+
+  sess.run(train_step,<span class="pl-v">feed_dict</span><span class="pl-k">=</span>{x:<span class="pl-c1">X_train</span>[batch_ind], y_: y_train[batch_ind], keep_prob: <span class="pl-c1">0.5</span>})
+
+sess.close()
+
+<span class="pl-c"># We can now open TensorBoard. Run the following line from your terminal</span>
+<span class="pl-c"># tensorboard --logdir=/home/rob/Dropbox/ConvNets/tf/log_tb</span></pre></div>
+
+<p>As always, I am curious to any comments and questions. Reach me at <a href="mailto:romijndersrob@gmail.com">romijndersrob@gmail.com</a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/RobRomijnders">RobRomijnders</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
